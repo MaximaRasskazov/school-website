@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <style>
+        /* Основные стили для страницы */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to top, #00008B, #ADD8E6); /* Градиентный переход от темного синего к светлому */
+            color: #2c3e50; /* темно-синий цвет для текста */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Пузырьки, двигающиеся по экрану */
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: floatUp 6s infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100vh);
+            }
+        }
+
+        .bubble:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            left: 10%;
+            animation-duration: 7s;
+            animation-delay: 0s;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 70%);
+        }
+
+        .bubble:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            left: 30%;
+            animation-duration: 8s;
+            animation-delay: 1s;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 70%);
+        }
+
+        .bubble:nth-child(3) {
+            width: 70px;
+            height: 70px;
+            left: 50%;
+            animation-duration: 9s;
+            animation-delay: 2s;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 70%);
+        }
+
+        .bubble:nth-child(4) {
+            width: 50px;
+            height: 50px;
+            left: 70%;
+            animation-duration: 6s;
+            animation-delay: 3s;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 70%);
+        }
+
+        .bubble:nth-child(5) {
+            width: 100px;
+            height: 100px;
+            left: 90%;
+            animation-duration: 10s;
+            animation-delay: 4s;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 70%);
+        }
+
+        h1 {
+            color: #1e3a5f;
+            font-size: 3em;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        /* Название "Спасти океан" */
+        .title {
+            font-size: 4em; /* Увеличиваем размер текста */
+            font-family: 'Dancing Script', cursive; /* Каллиграфический шрифт */
+            font-weight: normal;
+            text-transform: uppercase;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        /* Контейнер для формы и логотипа */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.8); /* полупрозрачный белый фон для формы */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px; /* Максимальная ширина формы */
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #1e3a5f;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input::placeholder {
+            color: rgba(0, 0, 0, 0.5); /* полупрозрачный цвет текста */
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4682b4; /* ярко-синий */
+            color: white;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: red;
+            margin-top: 10px;
+        }
+
+        #welcomeMessage {
+            font-size: 1.5em;
+            color: #27ae60;
+            margin-top: 20px;
+        }
+    </style>
+    <!-- Добавление каллиграфического шрифта через Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Пузырьки на фоне -->
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+
+    <!-- Контейнер с логотипом и формой -->
+    <div class="container">
+        <!-- Название "Спасти океан" -->
+        <div class="title">
+            Спасти океан
+        </div>
+
+        <!-- Логотип морской волны -->
+        <img src="https://www.example.com/wave-logo.png" alt="Wave Logo" class="logo">
+
+        <h1>Авторизация</h1>
+        
+        <!-- Форма для ввода логина и пароля -->
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Введите логин" autocomplete="on" required><br><br>
+            <input type="password" id="password" name="password" placeholder="Введите пароль" autocomplete="on" required><br><br>
+
+            <button type="submit">Войти</button>
+        </form>
+
+        <p id="error" style="display: none;">Неверный логин или пароль!</p>
+        <h2 id="welcomeMessage" style="display: none;"></h2>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Простейшая проверка логина и пароля
+            if (username === "user" && password === "password123") {
+                // Перенаправление на личную страницу
+                window.location.href = "profile.html"; // Убедитесь, что профильная страница существует
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

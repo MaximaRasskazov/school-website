@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Архив сетов</title>
+  <style>
+    /* Основные стили для страницы */
+    body {
+      font-family: Arial, sans-serif;
+      color: #2c3e50;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100vh;
+      background: linear-gradient(to top, #00008B, #ADD8E6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px 30px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      border-bottom: 2px solid #4682b4;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .header h1 {
+      font-size: 1.8em;
+      color: #1e3a5f;
+      margin: 0 20px;
+    }
+
+    /* Контейнер для сетов */
+    .sets-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 100px;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .set {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      margin-bottom: 40px; /* Увеличиваем расстояние между сетами */
+      text-align: center;
+      padding: 20px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .set h3 {
+      color: #1e3a5f;
+      margin: 15px 0;
+    }
+
+    .set p {
+      color: #555;
+    }
+
+    .set button {
+      background-color: #4682b4;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      font-size: 1.1em;
+      cursor: pointer;
+      border-radius: 5px;
+      height: 40px;
+    }
+
+    .set button:hover {
+      background-color: #1e3a5f;
+    }
+
+    .set button:disabled {
+      background-color: #b0c4de;
+      cursor: not-allowed;
+    }
+
+    .set-status {
+      margin-top: 10px;
+      color: #f00;
+    }
+
+    /* Стиль для уведомлений */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #4682b4;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Архив сетов</h1>
+  </div>
+
+  <div class="sets-container">
+    <!-- Сет 1 -->
+    <div class="set" id="set1">
+      <h3>Сет "Океанская Сила"</h3>
+      <p>Артефакт 1: Морской Дух</p>
+      <p>Артефакт 2: Трещина Воды</p>
+      <p>Артефакт 3: Кристалл Океанской Глубины</p>
+      <p>Дает возможность стать невидимым в воде.</p>
+      <p class="set-status">Доступно: Нет (не хватает 1 артефакта)</p>
+      <button id="buySet1" disabled>Купить сет (не хватает 1 артефакта)</button>
+    </div>
+
+    <!-- Сет 2 -->
+    <div class="set" id="set2">
+      <h3>Сет "Глубины Океана"</h3>
+      <p>Артефакт 1: Трещина Воды</p>
+      <p>Артефакт 2: Кристалл Океанской Глубины</p>
+      <p>Артефакт 3: Морской Дух</p>
+      <p>Дает возможность исследовать океанские глубины без последствий.</p>
+      <p class="set-status">Доступно: Да</p>
+      <button id="buySet2">Купить сет (все артефакты есть)</button>
+    </div>
+  </div>
+
+  <!-- Уведомление -->
+  <div class="notification" id="notification"></div>
+
+  <script>
+    // Изначальные данные о наличии артефактов
+    const artifactsPurchased = {
+      "Морской Дух": false,
+      "Трещина Воды": false,
+      "Кристалл Океанской Глубины": false
+    };
+
+    // Функция для обновления состояния кнопок сета
+    function updateSetButton(setId) {
+      const setButton = document.getElementById(`buySet${setId}`);
+      const set = document.getElementById(`set${setId}`);
+      const artifacts = set.querySelectorAll("p");
+
+      // Проверка, что все артефакты куплены
+      let allArtifactsPurchased = true;
+      artifacts.forEach(artifact => {
+        const artifactName = artifact.textContent.split(":")[1]?.trim();
+        if (artifactName && !artifactsPurchased[artifactName]) {
+          allArtifactsPurchased = false;
+        }
+      });
+
+      // Обновляем доступность кнопки
+      if (allArtifactsPurchased) {
+        setButton.disabled = false;
+        setButton.style.backgroundColor = "#4682b4";
+        setButton.textContent = `Купить сет (все артефакты есть)`;
+      } else {
+        setButton.disabled = true;
+        setButton.style.backgroundColor = "#b0c4de";
+        setButton.textContent = `Купить сет (не хватает артефактов)`;
+      }
+    }
+
+    // Функция для покупки артефакта
+    function buyArtifact(artifactName) {
+      artifactsPurchased[artifactName] = true;
+      showNotification(`Вы успешно купили артефакт: ${artifactName}`);
+      updateSetButton(1); // Обновить кнопки для сетов
+      updateSetButton(2); // Обновить кнопки для сетов
+    }
+
+    // Функция для покупки сета
+    function buySet(setId) {
+      alert(`Вы успешно приобрели сет ${setId === 1 ? '"Океанская Сила"' : '"Глубины Океана"}!`);
+    }
+
+    // Функция для отображения уведомления
+    function showNotification(message) {
+      const notification = document.getElementById("notification");
+      notification.textContent = message;
+      notification.style.display = "block";
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, 3000);
+    }
+
+    // Добавим слушатели на кнопки покупки артефактов
+    document.getElementById("buySet1").addEventListener("click", () => buyArtifact("Морской Дух"));
+    document.getElementById("buySet2").addEventListener("click", () => buyArtifact("Трещина Воды"));
+
+    // Добавляем слушателей для кнопок покупки сетов
+    document.getElementById("buySet1").addEventListener("click", () => buySet(1));
+    document.getElementById("buySet2").addEventListener("click", () => buySet(2));
+
+    // Изначальная проверка состояния кнопок
+    updateSetButton(1);
+    updateSetButton(2);
+  </script>
+</body>
+</html>
