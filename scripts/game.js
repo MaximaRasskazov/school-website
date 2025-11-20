@@ -9,7 +9,7 @@ const gameOverMessage = document.getElementById('gameOverMessage');
 
 // Настройки размера холста
 const CANVAS_WIDTH = 300;
-const CANVAS_HEIGHT = 800;
+const CANVAS_HEIGHT = 600;
 
 // Установка размера холста
 canvas.width = CANVAS_WIDTH;
