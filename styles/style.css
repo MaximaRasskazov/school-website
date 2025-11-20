@@ -1,0 +1,216 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #062456;
+    color: #e3e7ee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background-image: linear-gradient(to bottom, #062456, #1d3867, #334d77);
+}
+
+.main-header {
+    background-color: #062456;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid #4a6188;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #e3e7ee;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    flex: 1;
+}
+
+.game-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #e3e7ee;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    flex: 2;
+}
+
+.game-message {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e3e7ee;
+    text-align: center;
+    margin-bottom: 20px;
+    min-height: 30px;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    padding-top: 30px;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(26, 52, 111, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.canvas-container {
+    position: relative;
+    display: inline-block;
+}
+
+#gameCanvas {
+    background: #062456;
+    border-radius: 10px;
+    border: 3px solid #4a6188;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.game-over-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(198, 40, 40, 0.95);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 15px;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 10;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border: 3px solid #ff6b6b;
+    display: none;
+}
+
+.controls-top, .controls-bottom {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.button-m {
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #4a6188 0, #334d77 100%);
+    border: 0;
+    border-radius: 8px;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, rgba(58, 65, 111, 0.5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #e3e7ee;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono", monospace;
+    height: 48px;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: box-shadow 0.15s, transform 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow, transform;
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.button-m:focus {
+    box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+}
+
+.button-m:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #334d77 0 -3px 0 inset;
+    transform: translateY(-2px);
+    background-image: radial-gradient(100% 100% at 100% 0, #627799 0, #4a6188 100%);
+}
+
+.button-m:active {
+    box-shadow: #334d77 0 3px 7px inset;
+    transform: translateY(2px);
+}
+
+.control-btn {
+    background-image: radial-gradient(100% 100% at 100% 0, #88b990 0, #328275 100%);
+}
+
+.control-btn:hover {
+    background-image: radial-gradient(100% 100% at 100% 0, #abcd9e 0, #88b990 100%);
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .main-header {
+        padding: 12px 20px;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .game-title {
+        font-size: 1.8rem;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    .controls-top, .controls-bottom {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .button-m {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .game-over-message {
+        font-size: 1.5rem;
+        padding: 15px 25px;
+    }
+    
+    .game-message {
+        font-size: 1.2rem;
+    }
+}
