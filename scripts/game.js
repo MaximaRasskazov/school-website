@@ -9,8 +9,10 @@ const gameOverMessage = document.getElementById('gameOverMessage');
 
 // Переменные игры
 let gameRunning = false;
+let gamePaused = false;
 let animationId;
 let score = 0;
+let lastUpdateTime = 0;
 
 // Полосы движения (3 полосы)
 const lanes = [50, 150, 250];
@@ -20,9 +22,9 @@ const playerHeight = 60;
 
 // Препятствия
 let obstacles = [];
-let obstacleSpeed = 2;
-let lastObstacleY = -100; // Начальное значение для первого препятствия
-const minObstacleGap = 120; // Минимальное расстояние между препятствиями (2x высота машины)
+let obstacleSpeed = 1.1;
+let lastObstacleY = -100;
+const minObstacleGap = 120;
 
 // Цвета из палитры
 const colors = {
@@ -130,7 +132,7 @@ function createObstacle() {
         const width = 40;
         const height = 60;
         const x = lanes[lane] - width / 2;
-        const color = `hsl(${Math.random() * 60 + 0}, 70%, 50%)`; // Красные/оранжевые оттенки
+        const color = `hsl(${Math.random() * 60 + 0}, 70%, 50%)`;
         
         obstacles.push({
             x: x,
@@ -142,27 +144,29 @@ function createObstacle() {
         });
     });
     
-    lastObstacleY = -60; // Сбрасываем для следующего препятствия
+    lastObstacleY = -60;
 }
 
-function updateObstacles() {
-    // Двигаем препятствия
-    for (let i = obstacles.length - 1; i >= 0; i--) {
-        obstacles[i].y += obstacleSpeed;
-        
-        // Удаляем препятствия, которые уехали за экран
-        if (obstacles[i].y > canvas.height) {
-            obstacles.splice(i, 1);
-            score++;
-            gameMsg.textContent = `Счёт: ${score}`;
+function updateObstacles(deltaTime) {
+    // Двигаем препятствия только если игра не на паузе
+    if (!gamePaused) {
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            obstacles[i].y += obstacleSpeed * (deltaTime / 16); // Нормализуем скорость
+            
+            // Удаляем препятствия, которые уехали за экран
+            if (obstacles[i].y > canvas.height) {
+                obstacles.splice(i, 1);
+                score++;
+                gameMsg.textContent = `Счёт: ${score}`;
+            }
         }
-    }
-    
-    // Создаем новые препятствия с правильным интервалом
-    if (obstacles.length === 0 || (lastObstacleY + minObstacleGap) < 0) {
-        createObstacle();
-    } else {
-        lastObstacleY += obstacleSpeed;
+        
+        // Создаем новые препятствия с правильным интервалом
+        if (obstacles.length === 0 || (lastObstacleY + minObstacleGap) < 0) {
+            createObstacle();
+        } else {
+            lastObstacleY += obstacleSpeed * (deltaTime / 16);
+        }
     }
 }
 
@@ -184,30 +188,33 @@ function checkCollisions() {
     return false; // Столкновений нет
 }
 
-function gameLoop() {
+function gameLoop(timestamp) {
     // Очистка холста
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Вычисляем время, прошедшее с последнего кадра
+    const deltaTime = timestamp - lastUpdateTime;
+    lastUpdateTime = timestamp;
     
     // Отрисовка дороги
     drawRoad();
     
     // Обновление и отрисовка препятствий
-    updateObstacles();
+    updateObstacles(deltaTime);
     drawObstacles();
     
     // Отрисовка игрока
     drawPlayer();
     
-    // Проверка столкновений
-    if (checkCollisions()) {
-        stopGame();
-        gameOverMessage.textContent = `Авария! Счёт: ${score}`;
+    // Проверка столкновений (только если игра не на паузе)
+    if (!gamePaused && checkCollisions()) {
+        gameOver();
         return;
     }
     
-    // Увеличиваем сложность со временем
-    if (obstacleSpeed < 5 && score % 5 === 0) {
-        obstacleSpeed += 0.01;
+    // Увеличиваем сложность со временем (только если игра не на паузе)
+    if (!gamePaused && obstacleSpeed < 3 && score % 5 === 0) {
+        obstacleSpeed += 0.2; // Уменьшил шаг увеличения скорости
     }
     
     // Продолжаем игровой цикл
@@ -219,40 +226,59 @@ function gameLoop() {
 function startGame() {
     if (!gameRunning) {
         gameRunning = true;
+        gamePaused = false;
         score = 0;
         obstacles = [];
         lastObstacleY = -100;
         obstacleSpeed = 2;
+        lastUpdateTime = 0;
         gameMsg.textContent = 'Игра началась! Управляйте машиной.';
         gameOverMessage.style.display = 'none';
         
-        gameLoop();
+        animationId = requestAnimationFrame(gameLoop);
+    } else if (gamePaused) {
+        // Если игра была на паузе, снимаем с паузы
+        gamePaused = false;
+        lastUpdateTime = performance.now(); // Сбрасываем время после паузы
+        gameMsg.textContent = `Продолжаем! Счёт: ${score}`;
     }
 }
 
-function stopGame() {
+function pauseGame() {
+    if (gameRunning && !gamePaused) {
+        gamePaused = true;
+        gameMsg.textContent = `Пауза. Счёт: ${score}`;
+    } else if (gameRunning && gamePaused) {
+        // Если уже на паузе, снимаем с паузы
+        gamePaused = false;
+        lastUpdateTime = performance.now(); // Сбрасываем время после паузы
+        gameMsg.textContent = `Продолжаем! Счёт: ${score}`;
+    }
+}
+
+function gameOver() {
     gameRunning = false;
+    gamePaused = false;
     cancelAnimationFrame(animationId);
+    gameOverMessage.textContent = `Авария! Счёт: ${score}`;
     gameOverMessage.style.display = 'block';
 }
 
 function moveLeft() {
-    if (gameRunning) {
+    if (gameRunning && !gamePaused) {
         if (currentLane > 0) {
             currentLane--;
         } else {
-            // Если на первой полосе (0), перемещаемся на последнюю (2)
             currentLane = 2;
         }
     }
 }
 
 function moveRight() {
-    if (gameRunning) {
+    if (gameRunning && !gamePaused) {
         if (currentLane < 2) {
             currentLane++;
         } else {
-            // Если на последней полосе (2), перемещаемся на первую (0)
             currentLane = 0;
         }
     }
@@ -260,7 +286,7 @@ function moveRight() {
 
 // Обработчики событий
 startBtn.addEventListener('click', startGame);
-stopBtn.addEventListener('click', stopGame);
+stopBtn.addEventListener('click', pauseGame);
 leftBtn.addEventListener('click', moveLeft);
 rightBtn.addEventListener('click', moveRight);
 
@@ -268,12 +294,8 @@ rightBtn.addEventListener('click', moveRight);
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') moveLeft();
     if (e.key === 'ArrowRight') moveRight();
-    if (e.key === ' ') { // Пробел для старта/остановки
-        if (gameRunning) {
-            stopGame();
-        } else {
-            startGame();
-        }
+    if (e.key === ' ') {
+        pauseGame();
     }
 });
 
