@@ -239,7 +239,7 @@ function startGame() {
         score = 0;
         obstacles = [];
         lastObstacleY = -100;
-        obstacleSpeed = 1.1;
+        obstacleSpeed = 1.5;
         lastUpdateTime = 0;
         gameMsg.textContent = 'Игра началась! Управляйте машиной.';
         gameOverMessage.style.display = 'none';
