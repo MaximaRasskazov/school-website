@@ -86,6 +86,7 @@ body {
 .canvas-container {
     position: relative;
     display: inline-block;
+    width: 100%;
 }
 
 #gameCanvas {
@@ -93,6 +94,9 @@ body {
     border-radius: 10px;
     border: 3px solid #4a6188;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 300px;
+    height: 400px;
 }
 
 .game-over-message {
@@ -177,7 +181,12 @@ body {
     background-image: radial-gradient(100% 100% at 100% 0, #abcd9e 0, #88b990 100%);
 }
 
-/* Адаптивность */
+.arrow-btn {
+    min-width: 80px !important;
+    font-size: 20px;
+}
+
+/* Адаптивность для мобильных */
 @media (max-width: 600px) {
     .main-header {
         padding: 12px 20px;
@@ -192,17 +201,26 @@ body {
     }
     
     .container {
-        padding: 20px;
+        padding: 15px;
     }
     
     .controls-top, .controls-bottom {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
     }
     
     .button-m {
-        width: 100%;
-        max-width: 200px;
+        min-width: 100px;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .arrow-btn {
+        min-width: 60px !important;
+        height: 44px;
+        font-size: 18px;
     }
     
     .game-over-message {
@@ -212,5 +230,28 @@ body {
     
     .game-message {
         font-size: 1.2rem;
+    }
+
+    #gameCanvas {
+        max-width: 280px;
+        height: 370px;
+    }
+}
+
+@media (max-width: 400px) {
+    #gameCanvas {
+        max-width: 250px;
+        height: 330px;
+    }
+    
+    .button-m {
+        min-width: 90px;
+        height: 40px;
+        font-size: 13px;
+    }
+    
+    .arrow-btn {
+        min-width: 50px !important;
+        height: 40px;
     }
 }

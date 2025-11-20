@@ -7,6 +7,14 @@ const rightBtn = document.getElementById('rightBtn');
 const gameMsg = document.getElementById('gameMsg');
 const gameOverMessage = document.getElementById('gameOverMessage');
 
+// Настройки размера холста
+const CANVAS_WIDTH = 300;
+const CANVAS_HEIGHT = 400;
+
+// Установка размера холста
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
+
 // Переменные игры
 let gameRunning = false;
 let gamePaused = false;
@@ -16,7 +24,7 @@ let lastUpdateTime = 0;
 
 // Полосы движения (3 полосы)
 const lanes = [50, 150, 250];
-let currentLane = 1; // Начинаем со средней полосы
+let currentLane = 1;
 const playerWidth = 40;
 const playerHeight = 60;
 
@@ -151,7 +159,7 @@ function updateObstacles(deltaTime) {
     // Двигаем препятствия только если игра не на паузе
     if (!gamePaused) {
         for (let i = obstacles.length - 1; i >= 0; i--) {
-            obstacles[i].y += obstacleSpeed * (deltaTime / 16); // Нормализуем скорость
+            obstacles[i].y += obstacleSpeed * (deltaTime / 16);
             
             // Удаляем препятствия, которые уехали за экран
             if (obstacles[i].y > canvas.height) {
@@ -181,11 +189,11 @@ function checkCollisions() {
             playerY < obstacle.y + obstacle.height &&
             playerY + playerHeight > obstacle.y) {
             
-            return true; // Столкновение
+            return true;
         }
     }
     
-    return false; // Столкновений нет
+    return false;
 }
 
 function gameLoop(timestamp) {
@@ -213,8 +221,9 @@ function gameLoop(timestamp) {
     }
     
     // Увеличиваем сложность со временем (только если игра не на паузе)
-    if (!gamePaused && obstacleSpeed < 3 && score % 5 === 0) {
-        obstacleSpeed += 0.2; // Уменьшил шаг увеличения скорости
+    // ИЗМЕНИТЕ ЭТИ ЗНАЧЕНИЯ ДЛЯ РЕГУЛИРОВКИ СКОРОСТИ:
+    if (!gamePaused && obstacleSpeed < 3 && score % 3 === 0) {
+        obstacleSpeed += 0.3; // Шаг увеличения скорости
     }
     
     // Продолжаем игровой цикл
@@ -230,7 +239,7 @@ function startGame() {
         score = 0;
         obstacles = [];
         lastObstacleY = -100;
-        obstacleSpeed = 2;
+        obstacleSpeed = 1.1;
         lastUpdateTime = 0;
         gameMsg.textContent = 'Игра началась! Управляйте машиной.';
         gameOverMessage.style.display = 'none';
@@ -239,7 +248,7 @@ function startGame() {
     } else if (gamePaused) {
         // Если игра была на паузе, снимаем с паузы
         gamePaused = false;
-        lastUpdateTime = performance.now(); // Сбрасываем время после паузы
+        lastUpdateTime = performance.now();
         gameMsg.textContent = `Продолжаем! Счёт: ${score}`;
     }
 }
@@ -251,7 +260,7 @@ function pauseGame() {
     } else if (gameRunning && gamePaused) {
         // Если уже на паузе, снимаем с паузы
         gamePaused = false;
-        lastUpdateTime = performance.now(); // Сбрасываем время после паузы
+        lastUpdateTime = performance.now();
         gameMsg.textContent = `Продолжаем! Счёт: ${score}`;
     }
 }
